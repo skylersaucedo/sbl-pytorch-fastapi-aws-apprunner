@@ -40,6 +40,8 @@ def get_prediction(image_bytes):
     tensor = transform_image(image_bytes=image_bytes)
     outputs = model.forward(tensor)
     _, y_hat = outputs.max(1)
+    print('look at your prediction: ', y_hat)
+    print('pred index: ', str(y_hat.item()))
     predicted_idx = str(y_hat.item())
     return imagenet_class_index[predicted_idx]
 
