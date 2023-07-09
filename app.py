@@ -15,7 +15,7 @@ import uvicorn
 app = fastapi.FastAPI()
 
 #model = models.densenet121(weights="DenseNet121_Weights.IMAGENET1K_V1")
-model = torch.jit.load('hair_disease_model_10class.pt')
+model = torch.jit.load("hair_disease_model_10class.pt")
 
 model.eval()
 
