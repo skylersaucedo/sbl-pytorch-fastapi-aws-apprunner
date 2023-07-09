@@ -4,7 +4,7 @@ Build a PyTorch model that can be used for prediction served out via FastAPI
 
 import io
 import json
-
+import torch
 from torchvision import models
 import torchvision.transforms as transforms
 from PIL import Image
@@ -14,9 +14,13 @@ import uvicorn
 
 app = fastapi.FastAPI()
 
-model = models.densenet121(weights="DenseNet121_Weights.IMAGENET1K_V1")
+#model = models.densenet121(weights="DenseNet121_Weights.IMAGENET1K_V1")
+model = torch.jit.load('hair_disease_model_10class.pt')
+
 model.eval()
-imagenet_class_index = json.load(open("imagenet_class_index.json", encoding="utf-8"))
+
+#imagenet_class_index = json.load(open("imagenet_class_index.json", encoding="utf-8"))
+imagenet_class_index = json.load(open("10class_index.json", encoding="utf-8"))
 
 
 def transform_image(image_bytes):
@@ -42,7 +46,7 @@ def get_prediction(image_bytes):
 
 @app.get("/")
 def index():
-    return {"message": "Hello World"}
+    return {"message": "Hello Hair Disease July 9 2023"}
 
 
 @app.post("/files/")
