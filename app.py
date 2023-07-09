@@ -15,7 +15,7 @@ import uvicorn
 app = fastapi.FastAPI()
 
 #model = models.densenet121(weights="DenseNet121_Weights.IMAGENET1K_V1")
-model = torch.jit.load("model_10_class_jit.pt")
+model = torch.load("model_10_class_not_jit.pt")
 
 model.eval()
 
