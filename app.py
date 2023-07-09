@@ -50,7 +50,7 @@ def get_prediction(image_bytes):
     print('pred index: ', str(y_hat.item()))
 
     predicted_idx = str(y_hat.item())
-    return imagenet_class_index[predicted_idx]
+    return predicted_idx, imagenet_class_index[predicted_idx]
 
 
 @app.get("/")
