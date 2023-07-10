@@ -14,13 +14,15 @@ import uvicorn
 
 app = fastapi.FastAPI()
 
-#model = models.densenet121(weights="DenseNet121_Weights.IMAGENET1K_V1")
-model = torch.load("model_10_class_not_jit.pt", map_location=torch.device('cpu'))
+model_10 = torch.load("model_10_class_not_jit.pt", map_location=torch.device('cpu'))
+model_3 = torch.load("model_3_class_not_jit.pt", map_location=torch.device('cpu'))
 
-model.eval()
+model_10.eval()
+model_3.eval()
 
 #imagenet_class_index = json.load(open("imagenet_class_index.json", encoding="utf-8"))
-imagenet_class_index = json.load(open("10class_index.json", encoding="utf-8"))
+model10_class_index = json.load(open("10class_index.json", encoding="utf-8"))
+model3_class_index = json.load(open("3class_index.json", encoding="utf-8"))
 
 
 def transform_image(image_bytes):
@@ -38,19 +40,26 @@ def transform_image(image_bytes):
 
 def get_prediction(image_bytes):
     tensor = transform_image(image_bytes=image_bytes)
-    #outputs = model.forward(tensor)
-    outputs = model(tensor)
-    #_, y_hat = outputs.max(1) 
-    #print('look at your prediction: ', y_hat)
-    #print('pred index: ', str(y_hat.item()))
 
-    _, y_hat = torch.max(outputs.data,1)
+    outputs_10 = model_10(tensor)
+    outputs_3 = model_3(tensor)
 
-    print('look at your prediction: ', y_hat)
-    print('pred index: ', str(y_hat.item()))
 
-    predicted_idx = str(y_hat.item())
-    return predicted_idx, imagenet_class_index[predicted_idx]
+    _10, y_hat10 = torch.max(outputs_10.data,1)
+    _3, y_hat3 = torch.max(outputs_3.data,1)
+
+    # print('look at your prediction: ', y_hat)
+    # print('pred index: ', str(y_hat.item()))
+
+    model_10_pred_idx = str(y_hat10.item())
+    model_3_pred_idx = str(y_hat3.item())
+
+    label_pred_10 = model10_class_index[model_10_pred_idx]
+    label_pred_3 = model3_class_index[model_3_pred_idx]
+
+
+
+    return model_3_pred_idx, label_pred_3, model_10_pred_idx, label_pred_10
 
 
 @app.get("/")
@@ -72,8 +81,8 @@ async def create_upload_file(file: UploadFile):
 async def predict(file: UploadFile = File(...)):
     image_bytes = await file.read()
     print(len(image_bytes))
-    class_id, class_name = get_prediction(image_bytes=image_bytes)
-    return {"class_id": class_id, "class_name": class_name}
+    model_3_pred_idx, label_pred_3, model_10_pred_idx, label_pred_10 = get_prediction(image_bytes=image_bytes)
+    return {"earlyorlateID": model_3_pred_idx, "class_name_3": label_pred_3, "diseaseID": model_10_pred_idx, "class_name_10":label_pred_10}
 
 
 if __name__ == "__main__":
