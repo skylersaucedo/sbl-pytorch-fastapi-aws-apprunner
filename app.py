@@ -77,19 +77,19 @@ def get_prediction(image_bytes):
     return model_3_pred_idx, label_pred_3, model_10_pred_idx, label_pred_10
 
 
-@app.get("/")
-def index():
-    return {"message": "Hello Hair Disease July 16 2023"}
+# @app.get("/")
+# def index():
+#     return {"message": "Hello Hair Disease July 16 2023"}
 
 
-@app.post("/files/")
-async def create_file(file: bytes = File()):
-    return {"file_size": len(file)}
+# @app.post("/files/")
+# async def create_file(file: bytes = File()):
+#     return {"file_size": len(file)}
 
 
-@app.post("/uploadfile/")
-async def create_upload_file(file: UploadFile):
-    return {"filename": file.filename}
+# @app.post("/uploadfile/")
+# async def create_upload_file(file: UploadFile):
+#     return {"filename": file.filename}
 
 
 # @app.post("/predict")
@@ -98,6 +98,10 @@ async def create_upload_file(file: UploadFile):
 #     print(len(image_bytes))
 #     model_3_pred_idx, label_pred_3, model_10_pred_idx, label_pred_10 = get_prediction(image_bytes=image_bytes)
 #     return {"earlyorlateID": model_3_pred_idx, "class_name_3": label_pred_3, "diseaseID": model_10_pred_idx, "class_name_10":label_pred_10}
+
+@app.route('/')
+def index():
+    return {"message": "Hello Hair Disease July 16 2023"}
 
 @app.route('/predict', methods=['GET', 'POST'])
 def upload_file():
