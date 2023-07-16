@@ -26,28 +26,18 @@ from flask_swagger_ui import get_swaggerui_blueprint
 
 app = Flask(__name__)
 
-SWAGGER_URL = '/docs'  # URL for exposing Swagger UI (without trailing '/')
-API_URL ="http://localhost:8080" # Our API url (can of course be a local resource)
+SWAGGER_URL="/swagger"
+API_URL="swagger.json"
 
-# Call factory function to create our blueprint
-swaggerui_blueprint = get_swaggerui_blueprint(
-    SWAGGER_URL,  # Swagger UI static files will be mapped to '{SWAGGER_URL}/dist/'
+swagger_ui_blueprint = get_swaggerui_blueprint(
+    SWAGGER_URL,
     API_URL,
-    config={  # Swagger UI config overrides
-        'app_name': "Test application"
-    },
-    # oauth_config={  # OAuth config. See https://github.com/swagger-api/swagger-ui#oauth2-configuration .
-    #    'clientId': "your-client-id",
-    #    'clientSecret': "your-client-secret-if-required",
-    #    'realm': "your-realms",
-    #    'appName': "your-app-name",
-    #    'scopeSeparator': " ",
-    #    'additionalQueryStringParams': {'test': "hello"}
-    # }
+    config={
+        'app_name': 'Access API'
+    }
 )
 
-app.register_blueprint(swaggerui_blueprint)
-
+app.register_blueprint(swagger_ui_blueprint, url_prefix=SWAGGER_URL)
 
 #app = fastapi.FastAPI()
 
@@ -81,7 +71,6 @@ def get_prediction(image_bytes):
     outputs_10 = model_10(tensor)
     outputs_3 = model_3(tensor)
 
-
     _10, y_hat10 = torch.max(outputs_10.data,1)
     _3, y_hat3 = torch.max(outputs_3.data,1)
 
@@ -94,8 +83,6 @@ def get_prediction(image_bytes):
     label_pred_10 = model10_class_index[model_10_pred_idx]
     label_pred_3 = model3_class_index[model_3_pred_idx]
 
-
-
     return model_3_pred_idx, label_pred_3, model_10_pred_idx, label_pred_10
 
 
@@ -103,16 +90,13 @@ def get_prediction(image_bytes):
 # def index():
 #     return {"message": "Hello Hair Disease July 16 2023"}
 
-
 # @app.post("/files/")
 # async def create_file(file: bytes = File()):
 #     return {"file_size": len(file)}
 
-
 # @app.post("/uploadfile/")
 # async def create_upload_file(file: UploadFile):
 #     return {"filename": file.filename}
-
 
 # @app.post("/predict")
 # async def predict(file: UploadFile = File(...)):
@@ -121,9 +105,12 @@ def get_prediction(image_bytes):
 #     model_3_pred_idx, label_pred_3, model_10_pred_idx, label_pred_10 = get_prediction(image_bytes=image_bytes)
 #     return {"earlyorlateID": model_3_pred_idx, "class_name_3": label_pred_3, "diseaseID": model_10_pred_idx, "class_name_10":label_pred_10}
 
+
+# Flask stuff below
+
 @app.route('/')
 def index():
-    return {"message": "Hello Hair Disease July 16 2023"}
+    return {"message": "FLASK -- Hello Hair Disease July 16 2023"}
 
 @app.route('/predict', methods=['GET', 'POST'])
 def upload_file():
@@ -141,11 +128,9 @@ def upload_file():
         # return render_template('index.html')
 
         model_3_pred_idx, label_pred_3, model_10_pred_idx, label_pred_10 = get_prediction(image_bytes=img_bytes)
-
-
         
         return {"earlyorlateID": model_3_pred_idx, "class_name_3": label_pred_3, "diseaseID": model_10_pred_idx, "class_name_10":label_pred_10}
 
 if __name__ == "__main__":
     #uvicorn.run(app, host="0.0.0.0", port=8080)
-    app.run(debug=False, host='0.0.0.0', port=8080)
+    app.run(debug=True, host='0.0.0.0', port=8080)
