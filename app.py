@@ -26,7 +26,7 @@ from flask_swagger_ui import get_swaggerui_blueprint
 
 app = Flask(__name__)
 
-SWAGGER_URL = '/api/docs'  # URL for exposing Swagger UI (without trailing '/')
+SWAGGER_URL = '/docs'  # URL for exposing Swagger UI (without trailing '/')
 API_URL = 'https://0.0.0.0'  # Our API url (can of course be a local resource)
 
 # Call factory function to create our blueprint
