@@ -19,8 +19,8 @@ from PIL import Image
 
 from flask import Flask, render_template, request, redirect
 
-from inference import get_prediction
-from commons import format_class_name
+#from inference import get_prediction
+#from commons import format_class_name
 
 app = Flask(__name__)
 
