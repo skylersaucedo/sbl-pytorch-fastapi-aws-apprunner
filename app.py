@@ -15,9 +15,10 @@ from PIL import Image
 
 
 # updating with Flask
+from crypt import methods
+from flask import Flask,jsonify,request,redirect
 
-
-from flask import Flask, render_template, request, redirect
+#from flask import Flask, render_template, request, redirect
 from flask_swagger_ui import get_swaggerui_blueprint
 
 # dont need inference
