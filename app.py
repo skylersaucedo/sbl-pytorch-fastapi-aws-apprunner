@@ -18,6 +18,7 @@ from PIL import Image
 
 
 from flask import Flask, render_template, request, redirect
+from flask_swagger_ui import get_swaggerui_blueprint
 
 # dont need inference
 #from inference import get_prediction
