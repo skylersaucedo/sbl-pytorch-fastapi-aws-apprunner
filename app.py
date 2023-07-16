@@ -27,7 +27,7 @@ from flask_swagger_ui import get_swaggerui_blueprint
 app = Flask(__name__)
 
 SWAGGER_URL = '/docs'  # URL for exposing Swagger UI (without trailing '/')
-API_URL = 'https://0.0.0.0'  # Our API url (can of course be a local resource)
+API_URL ="http://localhost:8080" # Our API url (can of course be a local resource)
 
 # Call factory function to create our blueprint
 swaggerui_blueprint = get_swaggerui_blueprint(
@@ -148,4 +148,4 @@ def upload_file():
 
 if __name__ == "__main__":
     #uvicorn.run(app, host="0.0.0.0", port=8080)
-    app.run(debug=True, host='0.0.0.0', port=8080)
+    app.run(debug=False, host='0.0.0.0', port=8080)
