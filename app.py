@@ -118,7 +118,7 @@ def index():
     return {"message": "FLASK -- Hello Hair Disease July 16 2023"}
 
 @app.route('/predict', methods=['GET', 'POST'])
-def upload_file():
+def predict():
     if request.method == 'POST':
         if 'file' not in request.files:
             return redirect(request.url)
