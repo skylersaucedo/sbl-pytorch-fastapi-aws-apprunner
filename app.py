@@ -19,6 +19,7 @@ from PIL import Image
 
 from flask import Flask, render_template, request, redirect
 
+# dont need inference
 #from inference import get_prediction
 #from commons import format_class_name
 
