@@ -14,7 +14,7 @@ from PIL import Image
 #import uvicorn
 
 
-# updating with Flask 
+# updating with Flask
 
 
 from flask import Flask, render_template, request, redirect
@@ -25,7 +25,27 @@ from flask import Flask, render_template, request, redirect
 
 app = Flask(__name__)
 
+SWAGGER_URL = '/api/docs'  # URL for exposing Swagger UI (without trailing '/')
+API_URL = 'http://127.0.0.1'  # Our API url (can of course be a local resource)
 
+# Call factory function to create our blueprint
+swaggerui_blueprint = get_swaggerui_blueprint(
+    SWAGGER_URL,  # Swagger UI static files will be mapped to '{SWAGGER_URL}/dist/'
+    API_URL,
+    config={  # Swagger UI config overrides
+        'app_name': "Test application"
+    },
+    # oauth_config={  # OAuth config. See https://github.com/swagger-api/swagger-ui#oauth2-configuration .
+    #    'clientId': "your-client-id",
+    #    'clientSecret': "your-client-secret-if-required",
+    #    'realm': "your-realms",
+    #    'appName': "your-app-name",
+    #    'scopeSeparator': " ",
+    #    'additionalQueryStringParams': {'test': "hello"}
+    # }
+)
+
+app.register_blueprint(swaggerui_blueprint)
 
 
 #app = fastapi.FastAPI()
@@ -119,7 +139,7 @@ def upload_file():
         #return render_template('result.html', class_id=class_id, class_name=class_name)
         # return render_template('index.html')
 
-        model_3_pred_idx, label_pred_3, model_10_pred_idx, label_pred_10 = get_prediction(image_bytes=image_bytes)
+        model_3_pred_idx, label_pred_3, model_10_pred_idx, label_pred_10 = get_prediction(image_bytes=img_bytes)
 
 
         
