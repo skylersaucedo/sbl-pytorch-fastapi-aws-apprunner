@@ -30,6 +30,15 @@ app = Flask(__name__)
 SWAGGER_URL="/swagger"
 API_URL="swagger.json"
 
+# look for cuda device
+
+print('is_available: ', torch.cuda.is_available())
+print('device_count: ', torch.cuda.device_count())
+print('current_device: ', torch.cuda.current_device())
+print('current_device: ', torch.cuda.device(0))
+print('get_device_name: ', torch.cuda.get_device_name(0))
+
+
 swagger_ui_blueprint = get_swaggerui_blueprint(
     SWAGGER_URL,
     API_URL,
