@@ -8,11 +8,26 @@ import torch
 from torchvision import models
 import torchvision.transforms as transforms
 from PIL import Image
-import fastapi
-from fastapi import File, UploadFile
-import uvicorn
 
-app = fastapi.FastAPI()
+#import fastapi
+#from fastapi import File, UploadFile
+#import uvicorn
+
+
+# updating with Flask 
+
+
+from flask import Flask, render_template, request, redirect
+
+from inference import get_prediction
+from commons import format_class_name
+
+app = Flask(__name__)
+
+
+
+
+#app = fastapi.FastAPI()
 
 model_10 = torch.load("model_10_class_not_jit.pt", map_location=torch.device('cpu'))
 model_3 = torch.load("model_3_class_not_jit.pt", map_location=torch.device('cpu'))
@@ -64,7 +79,7 @@ def get_prediction(image_bytes):
 
 @app.get("/")
 def index():
-    return {"message": "Hello Hair Disease July 9 2023"}
+    return {"message": "Hello Hair Disease July 16 2023"}
 
 
 @app.post("/files/")
@@ -77,13 +92,34 @@ async def create_upload_file(file: UploadFile):
     return {"filename": file.filename}
 
 
-@app.post("/predict")
-async def predict(file: UploadFile = File(...)):
-    image_bytes = await file.read()
-    print(len(image_bytes))
-    model_3_pred_idx, label_pred_3, model_10_pred_idx, label_pred_10 = get_prediction(image_bytes=image_bytes)
-    return {"earlyorlateID": model_3_pred_idx, "class_name_3": label_pred_3, "diseaseID": model_10_pred_idx, "class_name_10":label_pred_10}
+# @app.post("/predict")
+# async def predict(file: UploadFile = File(...)):
+#     image_bytes = await file.read()
+#     print(len(image_bytes))
+#     model_3_pred_idx, label_pred_3, model_10_pred_idx, label_pred_10 = get_prediction(image_bytes=image_bytes)
+#     return {"earlyorlateID": model_3_pred_idx, "class_name_3": label_pred_3, "diseaseID": model_10_pred_idx, "class_name_10":label_pred_10}
 
+@app.route('/', methods=['GET', 'POST'])
+def upload_file():
+    if request.method == 'POST':
+        if 'file' not in request.files:
+            return redirect(request.url)
+        file = request.files.get('file')
+        if not file:
+            return
+        img_bytes = file.read()
+
+        #class_id, class_name = get_prediction(image_bytes=img_bytes)
+        #class_name = format_class_name(class_name)
+        #return render_template('result.html', class_id=class_id, class_name=class_name)
+        # return render_template('index.html')
+
+        model_3_pred_idx, label_pred_3, model_10_pred_idx, label_pred_10 = get_prediction(image_bytes=image_bytes)
+
+
+        
+        return {"earlyorlateID": model_3_pred_idx, "class_name_3": label_pred_3, "diseaseID": model_10_pred_idx, "class_name_10":label_pred_10}
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8080)
+    #uvicorn.run(app, host="0.0.0.0", port=8080)
+    app.run(host='0.0.0.0', port=8080)
