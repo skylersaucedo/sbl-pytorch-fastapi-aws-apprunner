@@ -128,7 +128,7 @@ async def predictFIle(file: UploadFile = File(...)):
 # adding Matthias's route, using requests
 # https://fastapi.tiangolo.com/advanced/using-request-directly/
 @app.post("/predict")
-async def predictRequest(request: Request = Request(...)):
+async def predictRequest(request: Request = Request()):
     
     if request.method == 'POST':
       content_type = request.headers.get('Content-Type')
