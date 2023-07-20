@@ -119,7 +119,7 @@ async def create_upload_file(file: UploadFile):
     return {"filename": file.filename}
 
 @app.post("/predictOLD")
-async def predict(file: UploadFile = File(...)):
+async def predictFIle(file: UploadFile = File(...)):
     image_bytes = await file.read()
     print(len(image_bytes))
     model_3_pred_idx, label_pred_3, model_10_pred_idx, label_pred_10 = get_prediction(image_bytes=image_bytes)
@@ -128,7 +128,9 @@ async def predict(file: UploadFile = File(...)):
 # adding Matthias's route, using requests
 # https://fastapi.tiangolo.com/advanced/using-request-directly/
 @app.post("/predict")
-async def predict(request: Request):
+async def predictRequest(request: Request):
+  
+  redirect_url = "https://en.wikipedia.org/wiki/HTTP_404.com"
   
   if request.method == 'POST':
     content_type = request.headers.get('Content-Type')
@@ -141,7 +143,7 @@ async def predict(request: Request):
       img_bytes = data.get('file')
     elif (content_type == 'multipart/form-data'):
       if 'file' not in request.files:
-        return redirect(request.url)
+        return RedirectResponse(redirect_url, status_code="404", headers={"x-error": "Data Not Found"})
       file = request.files.get('file')
       if not file:
         return
@@ -149,7 +151,7 @@ async def predict(request: Request):
     else: 
       return "Content type is not supported."
    
-    if img_bytes:   # not sure if that works like that in Python...
+    if len(img_bytes) > 0:   # not sure if that works like that in Python...
       model_3_pred_idx, label_pred_3, model_10_pred_idx, label_pred_10 = get_prediction(image_bytes=img_bytes)        
       return {"earlyorlateID": model_3_pred_idx, "class_name_3": label_pred_3, "diseaseID": model_10_pred_idx, "class_name_10":label_pred_10}
     else: 
