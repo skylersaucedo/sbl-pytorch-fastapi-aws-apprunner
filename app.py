@@ -126,7 +126,7 @@ async def predict(file: UploadFile = File(...)):
     return {"earlyorlateID": model_3_pred_idx, "class_name_3": label_pred_3, "diseaseID": model_10_pred_idx, "class_name_10":label_pred_10}
 
 # adding Matthias's route, using requests
-
+# https://fastapi.tiangolo.com/advanced/using-request-directly/
 @app.post("/predict")
 async def predict(request: Request):
   
