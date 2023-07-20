@@ -129,9 +129,7 @@ async def predictFIle(file: UploadFile = File(...)):
 # https://fastapi.tiangolo.com/advanced/using-request-directly/
 @app.post("/predict")
 async def predictRequest(request: Request):
-  
-  redirect_url = "https://en.wikipedia.org/wiki/HTTP_404.com"
-  
+    
   if request.method == 'POST':
     content_type = request.headers.get('Content-Type')
     if (content_type == 'application/json'):
@@ -143,7 +141,7 @@ async def predictRequest(request: Request):
       img_bytes = data.get('file')
     elif (content_type == 'multipart/form-data'):
       if 'file' not in request.files:
-        return RedirectResponse(redirect_url, status_code="404", headers={"x-error": "Data Not Found"})
+        return {"oops":"no data in form"}
       file = request.files.get('file')
       if not file:
         return
