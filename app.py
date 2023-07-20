@@ -53,10 +53,12 @@ from torchvision import models
 import torchvision.transforms as transforms
 from PIL import Image
 import fastapi
-from fastapi import File, UploadFile
+from fastapi import File, UploadFile, Request
 import uvicorn
 import torch
-from flask import Flask, request, redirect
+from fastapi.responses import RedirectResponse, HTMLResponse
+
+#from flask import Flask, request, redirect
 
 app = fastapi.FastAPI()
 
@@ -106,7 +108,7 @@ def get_prediction(image_bytes):
 
 @app.get("/")
 def index():
-    return {"message": "Hello Hair Disease July 16 2023"}
+    return {"message": "Hello Hair Disease July 19 2023"}
 
 @app.post("/files/")
 async def create_file(file: bytes = File()):
@@ -123,16 +125,19 @@ async def predict(file: UploadFile = File(...)):
     model_3_pred_idx, label_pred_3, model_10_pred_idx, label_pred_10 = get_prediction(image_bytes=image_bytes)
     return {"earlyorlateID": model_3_pred_idx, "class_name_3": label_pred_3, "diseaseID": model_10_pred_idx, "class_name_10":label_pred_10}
 
-# adding Matthias's route
+# adding Matthias's route, using requests
 
-@app.route('/predict', methods=['GET', 'POST'])
-def predict():
+@app.post("/predict")
+async def predict(request: Request):
+  
   if request.method == 'POST':
     content_type = request.headers.get('Content-Type')
     if (content_type == 'application/json'):
       data = request.json
+      
       if not data:
-         return
+        return
+      
       img_bytes = data.get('file')
     elif (content_type == 'multipart/form-data'):
       if 'file' not in request.files:
@@ -149,6 +154,31 @@ def predict():
       return {"earlyorlateID": model_3_pred_idx, "class_name_3": label_pred_3, "diseaseID": model_10_pred_idx, "class_name_10":label_pred_10}
     else: 
       return "Cannot extract image data from request"
+
+# @app.route('/predict', methods=['GET', 'POST'])
+# def predict():
+#   if request.method == 'POST':
+#     content_type = request.headers.get('Content-Type')
+#     if (content_type == 'application/json'):
+#       data = request.json
+#       if not data:
+#          return
+#       img_bytes = data.get('file')
+#     elif (content_type == 'multipart/form-data'):
+#       if 'file' not in request.files:
+#         return redirect(request.url)
+#       file = request.files.get('file')
+#       if not file:
+#         return
+#       img_bytes = file.read()
+#     else: 
+#       return "Content type is not supported."
+   
+#     if img_bytes:   # not sure if that works like that in Python...
+#       model_3_pred_idx, label_pred_3, model_10_pred_idx, label_pred_10 = get_prediction(image_bytes=img_bytes)        
+#       return {"earlyorlateID": model_3_pred_idx, "class_name_3": label_pred_3, "diseaseID": model_10_pred_idx, "class_name_10":label_pred_10}
+#     else: 
+#       return "Cannot extract image data from request"
 
 
 # # Flask stuff below
