@@ -132,6 +132,7 @@ async def predictRequest(request: Request):
     
     if request.method == 'POST':
       content_type = request.headers.get('Content-Type')
+      print('content_type', content_type)
       if (content_type == 'application/json'):
         data = request.json
         print('you have data!', len(data))
