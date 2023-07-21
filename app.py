@@ -130,32 +130,38 @@ async def predictFIle(file: UploadFile = File(...)):
 @app.post("/predict")
 async def predictRequest(request: Request):
     
-    if request.method == 'POST':
-      content_type = request.headers.get('Content-Type')
-      print('content_type', content_type)
-      if (content_type == 'application/json'):
-        data = request.json
-        print('you have data!', len(data))
-        
-        if not data:
-          return
-        
-        img_bytes = data.get('file')
-      elif (content_type == 'multipart/form-data'):
-        if 'file' not in request.files:
-          return {"oops":"no data in form"}
-        file = request.files.get('file')
-        if not file:
-          return
-        img_bytes = file.read()
-      else: 
-        return "Content type is not supported."
+  if request.method == 'POST':
+    content_type = request.headers.get('Content-Type')
+    print('content_type', content_type)
+    print('packet: ', request)
+    #print('packet json: ', str(request.json()))
+    #print('request data', request['data'])
     
-      if len(img_bytes) > 0:   # not sure if that works like that in Python...
-        model_3_pred_idx, label_pred_3, model_10_pred_idx, label_pred_10 = get_prediction(image_bytes=img_bytes)        
-        return {"earlyorlateID": model_3_pred_idx, "class_name_3": label_pred_3, "diseaseID": model_10_pred_idx, "class_name_10":label_pred_10}
-      else: 
-        return "Cannot extract image data from request"
+    if (content_type == 'application/json'):
+      
+      data = await request.json()
+      print('you have data!', len(data))
+      
+      if not data:
+        return
+      
+      img_bytes = data.get('file')
+    if (content_type == 'multipart/form-data'):
+      print('you have multiformish dater!')
+      if 'file' not in request.files:
+        return {"oops":"no data in form"}
+      file = request.files.get('file')
+      if not file:
+        return
+      img_bytes = file.read()
+    else: 
+      return "Content type is not supported."
+  
+    if len(img_bytes) > 0:   # not sure if that works like that in Python...
+      model_3_pred_idx, label_pred_3, model_10_pred_idx, label_pred_10 = get_prediction(image_bytes=img_bytes)        
+      return {"earlyorlateID": model_3_pred_idx, "class_name_3": label_pred_3, "diseaseID": model_10_pred_idx, "class_name_10":label_pred_10}
+    else: 
+      return "Cannot extract image data from request"
 
 # @app.route('/predict', methods=['GET', 'POST'])
 # def predict():
