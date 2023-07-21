@@ -48,7 +48,7 @@ Build a PyTorch model that can be used for prediction served out via FastAPI
 
 import io
 import json
-
+import torchvision
 from torchvision import models
 import torchvision.transforms as transforms
 from PIL import Image
