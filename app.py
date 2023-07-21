@@ -121,7 +121,7 @@ async def create_upload_file(file: UploadFile):
 @app.post("/predictOLD")
 async def predictFIle(file: UploadFile = File(...)):
     image_bytes = await file.read()
-    print(len(image_bytes))
+    print('length of inc image', len(image_bytes))
     model_3_pred_idx, label_pred_3, model_10_pred_idx, label_pred_10 = get_prediction(image_bytes=image_bytes)
     return {"earlyorlateID": model_3_pred_idx, "class_name_3": label_pred_3, "diseaseID": model_10_pred_idx, "class_name_10":label_pred_10}
 
@@ -134,6 +134,7 @@ async def predictRequest(request: Request):
       content_type = request.headers.get('Content-Type')
       if (content_type == 'application/json'):
         data = request.json
+        print('you have data!', len(data))
         
         if not data:
           return
