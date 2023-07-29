@@ -8,7 +8,8 @@ pylint==2.15.3
 fastapi==0.85.0
 uvicorn==0.18.3
 Pillow==9.3.0
-torchvision==0.14.0
+#torchvision==0.14.0
+torchvision
 python-multipart==0.0.5
 Flask
 torch
