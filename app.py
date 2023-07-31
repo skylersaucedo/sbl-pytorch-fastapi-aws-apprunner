@@ -131,7 +131,7 @@ async def predictFIle(file: UploadFile = File(...)):
 async def predictRequest(request: Request):
     
   if request.method == 'POST':
-    content_type = request.headers.get('Content-Type')
+    content_type = request.headers.get('Content-type')
     print('content_type', content_type)
     print('packet: ', request)
     #print('packet json: ', str(request.json()))
