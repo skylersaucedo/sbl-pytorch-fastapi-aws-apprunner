@@ -139,14 +139,14 @@ async def predictRequest(request: Request):
     
     if (content_type == 'application/json'):
       
-      data = await request.json()
-      print('you have data!', len(data))
-      
+      data = request.json()
+      print('you have data!', data)
+      print('img_bytes', data.get('file'))
       if not data:
         return
       
       img_bytes = data.get('file')
-    if (content_type == 'multipart/form-data'):
+    elif (content_type == 'multipart/form-data'):
       print('you have multiformish dater!')
       if 'file' not in request.files:
         return {"oops":"no data in form"}
