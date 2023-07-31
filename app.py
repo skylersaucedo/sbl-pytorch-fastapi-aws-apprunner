@@ -57,6 +57,7 @@ from fastapi import File, UploadFile, Request
 import uvicorn
 import torch
 from fastapi.responses import RedirectResponse, HTMLResponse
+import base64
 
 #from flask import Flask, request, redirect
 
@@ -145,7 +146,12 @@ async def predictRequest(request: Request):
       if not data:
         return
       
-      img_bytes = data.get('file')
+      img_string = data.get('file')
+      #Clean string
+      img_string = img_string[img_string.find(",")+1:]
+      print('img_string', img_string)
+      img_bytes = base64.b64decode(img_string)
+      print('img_bytes', img_bytes)
     elif (content_type == 'multipart/form-data'):
       print('you have multiformish dater!')
       if 'file' not in request.files:
