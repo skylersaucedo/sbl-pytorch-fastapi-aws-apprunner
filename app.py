@@ -139,7 +139,7 @@ async def predictRequest(request: Request):
     
     if (content_type == 'application/json'):
       
-      data = request.json()
+      data = await request.json()
       print('you have data!', data)
       print('img_bytes', data.get('file'))
       if not data:
