@@ -133,25 +133,17 @@ async def predictRequest(request: Request):
     
   if request.method == 'POST':
     content_type = request.headers.get('Content-type')
-    print('content_type', content_type)
-    print('packet: ', request)
-    #print('packet json: ', str(request.json()))
-    #print('request data', request['data'])
-    
+        
     if (content_type == 'application/json'):
       
       data = await request.json()
-      print('you have data!', data)
-      print('img_bytes', data.get('file'))
       if not data:
         return
       
       img_string = data.get('file')
       #Clean string
       img_string = img_string[img_string.find(",")+1:]
-      print('img_string', img_string)
-      img_bytes = base64.b64decode(img_string)
-      print('img_bytes', img_bytes)
+      img_bytes = base64.b64decode(img_string)      
     elif (content_type == 'multipart/form-data'):
       print('you have multiformish dater!')
       if 'file' not in request.files:
